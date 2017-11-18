@@ -4,17 +4,72 @@ It's a [reverse polish
 notation](https://en.wikipedia.org/wiki/Reverse_Polish_notation) calculator with
 a CLI interface, written in Ruby.
 
+# Using it
+
+### From your own code:
+
+``` #ruby
+require "calculator"
+
+calculator = Calculator.new
+calculator.input("1 2 +")
+p calculator.output
+# => 3.0
+
+# You can chain input calls also
+calculator.input("4").input("*")
+p calculator.output
+# => 12.0
+
+# or do the whole cycle in one line
+p calculator.input("4").input("*").output
+# => 48.0
+```
+
+### From a command line:
+
+``` #bash
+git clone https://github.com/jcmorrow/cli_rpn'
+cd cli_rpn
+./bin/calculator
+Enter 'q' to exit
+> 1 2 +
+3.0
+> 4
+4.0
+> *
+12.0
+> 4 *
+48.0
+> q
+```
+
 # Approach
 
-I've recently been working on a scheme interpreter in Ruby, and I think a lot of
-my original plans for this project stem from that. I'm considering actually
-running a full grammar tokenizer/parser, but I'm not sure yet that that will
-actually be necessary.
+This calculator is designed to take advantage of two abstractions: a stack for
+storing operands and an interface for running operations on those operands. The
+calculator class is designed to be relatively interface-neutral; right now there
+is only a CLI, but it should be straightforward to add on a different interface
+like wrapping this class in a Sinatra app to have HTTP functionality.
 
-The game plan to start with is to model the calculator's number input with a
-stack (at least to start out). When it hits an operator it'll pop some values
-off of the stack, perform an arithmatic operation with them, and then put the
-result back onto the stack.
+# Decisions
+
+Using a stack was an obvious choice once I started looking at the examples given
+in the spec. I thought about writing a wrapper around `Array` instead of just
+using a blank array (which would allow me to move the logic in the `output`
+method out of `Calculator`) but it didn't feel like that class would have enough
+responsibility to be worth the indirection.
+
+I *did* decide to add a class just to represent a blank output. I wanted to do
+this mostly for testing reasons, I didn't think it would be appropriate for this
+class to return an empty string directly, since that is very much a
+representation of `nil` that just happens to be appropriate on a CLI. I could
+imagine someone instantiating a new `Calculator`, submitting a blank line,
+getting an empty string back and then accidentally trying to do some math with
+it and not knowing where the blank line came from necessarily . This way they
+can at least grep for `class NoOutput` if they're confused. Returning `nil`
+itself is *almost always* a bad idea because it gives no hints as to
+where in the call-stack it started.
 
 # Operations
 
@@ -52,3 +107,8 @@ implementing an interface to it pretty simple. You can submit input to it with
 the `input` method and read the current evaluation with the `output` method. For
 any kind of REPL-like interface these should be useful and straightforward. See
 `bin/calculator` for an example.
+
+# Contributing
+
+There shouldn't be much setup to do, just clone the repo and run `bundle`. Tests
+can be run with `bin/rspec`. Pull requests welcome!

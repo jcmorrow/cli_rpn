@@ -38,23 +38,24 @@ class Calculator
     self
   end
 
+  private
+
   def handle_inputs(inputs)
     inputs.each do |single_input|
-      if single_input =~ /(-?\d+)/
-        @operands.push($1.to_f)
-      elsif OPERATORS.include?(single_input)
-        handle_operator(single_input)
-      else
-        raise(
-          UnrecognizedCommand,
-          "Unrecognized command: #{single_input.inspect}",
-        )
-      end
+      handle_input(single_input)
     end
     self
   end
 
-  private
+  def handle_input(input)
+    if input =~ /(-?\d+)/
+      @operands.push($1.to_f)
+    elsif OPERATORS.include?(input)
+      handle_operator(input)
+    else
+      raise(UnrecognizedCommand, "Unrecognized command: #{input.inspect}")
+    end
+  end
 
   def handle_operator(operator)
     unless @operands.empty?
