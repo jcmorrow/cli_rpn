@@ -2,10 +2,14 @@ require "calculator"
 
 describe "Calculator" do
   describe ".input" do
-    it "can handle a blank input string" do
-      expect(run_input("")).to be_a(NoOutput)
-      expect(run_input("\n")).to be_a(NoOutput)
-      expect(run_input(" ")).to be_a(NoOutput)
+    it "treats a blank string as a repeat command" do
+      calculator = Calculator.new
+
+      expect(calculator.input("").output).to be_a(NoOutput)
+      calculator.input("1 1 1")
+      calculator.input("+")
+      calculator.input("\n")
+      expect(calculator.output).to eq(3.0)
     end
 
     it "can handle an integer as input" do

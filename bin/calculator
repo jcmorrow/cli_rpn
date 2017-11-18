@@ -5,12 +5,23 @@ $LOAD_PATH << File.expand_path("../../lib", __FILE__)
 require "calculator"
 require "readline"
 
+QUIT_COMMANDS = ["q"].freeze
+RESET_COMMANDS = ["reset", "r"].freeze
+
 calculator = Calculator.new
 
+puts "Enter 'q' to exit"
+
 while command = Readline.readline("> ", true)
-  if command == "q"
+  if QUIT_COMMANDS.include?(command)
     exit 0
+  elsif RESET_COMMANDS.include?(command)
+    calculator = Calculator.new
   else
-    puts calculator.input(command).output
+    begin
+      puts calculator.input(command).output
+    rescue UnrecognizedCommand => error
+      puts error.message
+    end
   end
 end

@@ -6,7 +6,10 @@ require "multiplication"
 require "no_output"
 require "subtraction"
 
+class UnrecognizedCommand < StandardError; end
+
 class Calculator
+  NOOP = :noop
   NO_OUTPUT = NoOutput.new
   OPERATIONS = {
     "*" => Multiplication,
@@ -18,6 +21,7 @@ class Calculator
 
   def initialize
     @operands = []
+    @last_command = NOOP
   end
 
   def output
@@ -26,17 +30,25 @@ class Calculator
 
   def input(input = "")
     inputs = input.to_s.strip.split(/\s/)
+    if inputs.empty? && @last_command != NOOP
+      handle_operator(@last_command)
+    else
+      handle_inputs(inputs)
+    end
+    self
+  end
+
+  def handle_inputs(inputs)
     inputs.each do |single_input|
-      if single_input.match?(/\A$/)
-        # we might want to consider adding a replay functionality where we
-        # repeat the last operation with the current stack here.
-        next
-      elsif single_input =~ /(-?\d+)/
+      if single_input =~ /(-?\d+)/
         @operands.push($1.to_f)
       elsif OPERATORS.include?(single_input)
         handle_operator(single_input)
       else
-        raise "Unrecognized input: #{single_input.inspect}"
+        raise(
+          UnrecognizedCommand,
+          "Unrecognized command: #{single_input.inspect}",
+        )
       end
     end
     self
@@ -50,5 +62,6 @@ class Calculator
       @operands.push(result)
       @output = result
     end
+    @last_command = operator
   end
 end
