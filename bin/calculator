@@ -1,0 +1,16 @@
+#!/usr/bin/env ruby
+
+$LOAD_PATH << File.expand_path("../../lib", __FILE__)
+
+require "calculator"
+require "readline"
+
+calculator = Calculator.new
+
+while command = Readline.readline("> ", true)
+  if command == "q"
+    exit 0
+  else
+    puts calculator.input(command).output
+  end
+end

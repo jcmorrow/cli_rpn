@@ -10,12 +10,8 @@ describe "Calculator" do
 
     it "can handle an integer as input" do
       (0..9).each do |int|
-        expect(run_input(int)).to be_a(NoOutput)
+        expect(run_input(int)).to eq(int.to_f)
       end
-    end
-
-    it "treats integers after operators as a reset to the output" do
-      expect(run_input("1 3 + 1 ")).to be_a(NoOutput)
     end
 
     it "correctly calls the operation for only the last two inputs" do

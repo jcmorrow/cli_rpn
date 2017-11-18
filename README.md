@@ -47,4 +47,8 @@ seems straightforward (famous last words).
 
 # Adding a New Interface
 
-[TODO: Fill this out once I've actually added a single UI 😂]
+The calculator only has two public methods: `input` and `output`. This makes
+implementing an interface to it pretty simple. You can submit input to it with
+the `input` method and read the current evaluation with the `output` method. For
+any kind of REPL-like interface these should be useful and straightforward. See
+`bin/calculator` for an example.
