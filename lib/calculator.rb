@@ -32,6 +32,14 @@ class Calculator
     self
   end
 
+  def stack
+    @operands
+  end
+
+  def pop!
+    @operands.pop
+  end
+
   private
 
   def handle_inputs(inputs)

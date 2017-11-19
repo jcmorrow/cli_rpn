@@ -32,7 +32,11 @@ p calculator.input("4").input("*").output
 git clone https://github.com/jcmorrow/cli_rpn'
 cd cli_rpn
 ./bin/calculator
-Enter 'q' to exit
+Commands:
+  - 'pop' or 'p' to pop the top value off of the current stack
+  - 'quit' or 'q' to exit
+  - 'stack' or 's' to view the current stack
+  - 'help' or 'h' to print these instructions
 > 1 2 +
 3.0
 > 4

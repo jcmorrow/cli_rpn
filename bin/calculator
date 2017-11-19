@@ -5,18 +5,37 @@ $LOAD_PATH << File.expand_path("../../lib", __FILE__)
 require "calculator"
 require "readline"
 
-QUIT_COMMANDS = ["q"].freeze
+HELP_COMMANDS = ["help", "h"].freeze
+POP_COMMANDS = ["pop", "p"].freeze
+QUIT_COMMANDS = ["quit", "q", "exit"].freeze
 RESET_COMMANDS = ["reset", "r"].freeze
+VIEW_STACK_COMMANDS = ["stack", "s"].freeze
 
 calculator = Calculator.new
 
-puts "Enter 'q' to exit"
+def print_instructions
+  puts <<~DOC
+    Commands:
+      - 'pop' or 'p' to pop the top value off of the current stack
+      - 'quit' or 'q' to exit
+      - 'stack' or 's' to view the current stack
+      - 'help' or 'h' to print these instructions
+  DOC
+end
+
+print_instructions
 
 while command = Readline.readline("> ", true)
   if QUIT_COMMANDS.include?(command)
     exit 0
+  elsif HELP_COMMANDS.include?(command)
+    print_instructions
   elsif RESET_COMMANDS.include?(command)
     calculator = Calculator.new
+  elsif POP_COMMANDS.include?(command)
+    puts calculator.pop!
+  elsif VIEW_STACK_COMMANDS.include?(command)
+    puts calculator.stack.join(" ")
   else
     begin
       puts calculator.input(command).output
