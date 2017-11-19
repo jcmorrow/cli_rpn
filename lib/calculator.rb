@@ -9,7 +9,6 @@ require "subtraction"
 class UnrecognizedCommand < StandardError; end
 
 class Calculator
-  NOOP = :noop
   NO_OUTPUT = NoOutput.new
   OPERATIONS = {
     "*" => Multiplication,
@@ -21,7 +20,6 @@ class Calculator
 
   def initialize
     @operands = []
-    @last_command = NOOP
   end
 
   def output
@@ -30,11 +28,7 @@ class Calculator
 
   def input(input = "")
     inputs = input.to_s.strip.split(/\s/)
-    if inputs.empty? && @last_command != NOOP
-      handle_operator(@last_command)
-    else
-      handle_inputs(inputs)
-    end
+    handle_inputs(inputs)
     self
   end
 
@@ -61,8 +55,6 @@ class Calculator
     unless @operands.empty?
       result = OPERATIONS[operator].new(@operands.pop(2)).perform
       @operands.push(result)
-      @output = result
     end
-    @last_command = operator
   end
 end
