@@ -50,7 +50,7 @@ class Calculator
   end
 
   def handle_input(input)
-    if input =~ /(-?\d+)/
+    if input =~ /^(-?\d+.?\d?+)$/
       @operands.push($1.to_f)
     elsif OPERATORS.include?(input)
       handle_operator(input)
